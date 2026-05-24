@@ -1,0 +1,152 @@
+/* ==============================
+   江湖百晓生 — 双主题 CSS 变量系统
+   ============================== */
+
+/* 水墨暗黑风 */
+.theme-ink {
+  --bg-primary: #121212;
+  --bg-secondary: #1a1a2e;
+  --bg-gradient: linear-gradient(135deg, #121212 0%, #1a1a2e 50%, #16213e 100%);
+  --text-primary: #e8d5b7;
+  --text-secondary: #a89070;
+  --text-muted: #6b5d4f;
+  --accent: #c0392b;
+  --accent-hover: #e74c3c;
+  --gold: #b8860b;
+  --gold-dim: rgba(184, 134, 11, 0.3);
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-bg-hover: rgba(255, 255, 255, 0.08);
+  --card-border: rgba(184, 134, 11, 0.2);
+  --card-border-hover: rgba(184, 134, 11, 0.4);
+  --input-bg: rgba(255, 255, 255, 0.08);
+  --input-border: rgba(184, 134, 11, 0.3);
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --nav-bg: rgba(18, 18, 18, 0.92);
+  --overlay: rgba(0, 0, 0, 0.6);
+  --scrollbar: rgba(184, 134, 11, 0.3);
+  --scrollbar-hover: rgba(184, 134, 11, 0.5);
+  --leaf-color: rgba(139, 90, 43, 0.6);
+}
+
+/* 古风宣纸风 */
+.theme-paper {
+  --bg-primary: #f5e6c8;
+  --bg-secondary: #e8d5b7;
+  --bg-gradient: linear-gradient(135deg, #f5e6c8 0%, #e8d5b7 50%, #dcc8a0 100%);
+  --text-primary: #2c1810;
+  --text-secondary: #5a3e2b;
+  --text-muted: #8b7355;
+  --accent: #8b4513;
+  --accent-hover: #a0522d;
+  --gold: #b8860b;
+  --gold-dim: rgba(184, 134, 11, 0.4);
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-bg-hover: rgba(255, 255, 255, 0.85);
+  --card-border: #d4a76a;
+  --card-border-hover: #c09050;
+  --input-bg: rgba(255, 255, 255, 0.6);
+  --input-border: #d4a76a;
+  --shadow: 0 4px 24px rgba(44, 24, 16, 0.15);
+  --nav-bg: rgba(245, 230, 200, 0.95);
+  --overlay: rgba(44, 24, 16, 0.3);
+  --scrollbar: rgba(139, 69, 19, 0.3);
+  --scrollbar-hover: rgba(139, 69, 19, 0.5);
+  --leaf-color: rgba(139, 90, 43, 0.4);
+}
+
+/* 全局基础样式 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-hover);
+}
+
+/* 通用链接样式 */
+a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: var(--accent);
+}
+
+/* 通用按钮样式 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn:hover {
+  border-color: var(--card-border-hover);
+  background: var(--card-bg-hover);
+  box-shadow: var(--shadow);
+}
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+/* Vue Router 过渡动画 */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* 装饰分隔线 */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  margin: 16px 0;
+}

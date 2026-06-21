@@ -116,7 +116,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '@/stores/app'
-import { characters, weapons, skills, factions, novels } from '@/data/shendiao'
+import { characters, weapons, skills, factions, novels } from '@/data/shediao'
 import type { SearchItem, SearchableType } from '@/data/schemas/types'
 
 const store = useAppStore()
@@ -295,7 +295,8 @@ function goTo(item: SearchResult) {
   store.addSearchHistory(item.name)
   keyword.value = ''
   showDropdown.value = false
-  router.push(TYPE_ROUTES[item.type])
+  // 深链接：携带实体 ID 作为 hash，目标页据此定位并高亮
+  router.push({ path: TYPE_ROUTES[item.type], hash: `#${item.id}` })
 }
 
 function highlightMatch(text: string, q?: string) {

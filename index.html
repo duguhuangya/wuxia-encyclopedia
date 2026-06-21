@@ -8,6 +8,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+      // 在 Vue 挂载前同步应用用户主题偏好，避免首屏主题闪烁（FOUC）
+      // 与 src/composables/useTheme.ts 中 useStorage 的 key 保持一致
+      ;(function () {
+        try {
+          var saved = localStorage.getItem('wuxia-theme');
+          // useStorage 存储的是 JSON 字符串，如 '"paper"'
+          if (saved) saved = JSON.parse(saved);
+          var theme = (saved === 'paper' || saved === 'ink') ? saved : 'ink';
+          var html = document.documentElement;
+          html.classList.remove('theme-ink', 'theme-paper');
+          html.classList.add('theme-' + theme);
+        } catch (e) {
+          /* localStorage 不可用时回退到默认 theme-ink */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>

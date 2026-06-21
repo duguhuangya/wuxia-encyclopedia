@@ -37,12 +37,23 @@ const routes: RouteRecordRaw[] = [
     name: 'settings',
     component: () => import('@/views/SettingsView.vue'),
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: () => import('@/views/NotFoundView.vue'),
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  scrollBehavior() {
+  scrollBehavior(to, _from, savedPosition) {
+    // 优先恢复浏览器历史位置
+    if (savedPosition) return savedPosition
+    // 带 hash（如 #char_xxx）时滚动到对应锚点
+    if (to.hash) {
+      return { el: to.hash, behavior: 'smooth', top: 80 }
+    }
     return { top: 0 }
   },
 })

@@ -83,7 +83,7 @@ const radarData = computed(() =>
   }))
 )
 
-const statLabels: Record<string, string> = {
+const statLabels: Record<keyof Character['radar'], string> = {
   internal: '内功',
   technique: '招式',
   agility: '身法',

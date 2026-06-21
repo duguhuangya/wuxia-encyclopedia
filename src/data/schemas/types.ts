@@ -42,7 +42,8 @@ export interface Character {
   status: CharacterStatus
   novelIds: ID[]      // 出场小说
   factionId?: ID      // 所属门派
-  masterId?: ID       // 师父
+  masterId?: ID       // 主要师父（保留兼容）
+  masterIds: ID[]     // 师父（支持多位，如江南七怪、洪七公等）
   apprenticeIds: ID[] // 徒弟
   rivalIds: ID[]      // 宿敌
   allyIds: ID[]       // 同盟/密友

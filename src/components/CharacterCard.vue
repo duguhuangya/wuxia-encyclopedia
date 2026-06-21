@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { Character } from '@/data/schemas/types'
-import { skills } from '@/data/shendiao'
+import { skills } from '@/data/shediao'
 
 const props = defineProps<{
   character: Character

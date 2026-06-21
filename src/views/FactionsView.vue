@@ -35,79 +35,79 @@
         <button class="close-btn" @click="selectedNode = null">✕</button>
 
         <!-- 门派详情 -->
-        <template v-if="selectedNode.type === 'faction'">
+        <template v-if="selectedNode.type === 'faction' && factionData">
           <div class="panel-header">
             <span class="panel-icon">🏯</span>
-            <h2>{{ selectedNode.data.name }}</h2>
-            <span class="align-badge" :class="'align-' + selectedNode.data.alignment">
-              {{ selectedNode.data.alignment }}
+            <h2>{{ factionData.name }}</h2>
+            <span class="align-badge" :class="'align-' + factionData.alignment">
+              {{ factionData.alignment }}
             </span>
           </div>
           <div class="panel-body">
-            <div class="info-row" v-if="selectedNode.data.location">
+            <div class="info-row" v-if="factionData.location">
               <span class="info-label">📍 所在地</span>
-              <span>{{ selectedNode.data.location }}</span>
+              <span>{{ factionData.location }}</span>
             </div>
-            <div class="info-row" v-if="selectedNode.data.leaderName">
+            <div class="info-row" v-if="factionData.leaderName">
               <span class="info-label">👑 掌门</span>
-              <span>{{ selectedNode.data.leaderName }}</span>
+              <span>{{ factionData.leaderName }}</span>
             </div>
             <div class="info-row">
               <span class="info-label">👥 成员</span>
               <div class="member-list">
                 <span
-                  v-for="m in selectedNode.data.members"
+                  v-for="m in factionData.members"
                   :key="m.id"
                   class="member-tag"
                   :class="'camp-' + m.camp"
                 >{{ m.name }}</span>
               </div>
             </div>
-            <div class="info-row" v-if="selectedNode.data.skills.length">
+            <div class="info-row" v-if="factionData.skills.length">
               <span class="info-label">⚔️ 武功</span>
               <div class="skill-list">
-                <span v-for="s in selectedNode.data.skills" :key="s" class="skill-tag">{{ s }}</span>
+                <span v-for="s in factionData.skills" :key="s" class="skill-tag">{{ s }}</span>
               </div>
             </div>
-            <p class="info-desc">{{ selectedNode.data.description }}</p>
+            <p class="info-desc">{{ factionData.description }}</p>
           </div>
         </template>
 
         <!-- 人物详情 -->
-        <template v-if="selectedNode.type === 'character'">
+        <template v-if="selectedNode.type === 'character' && charData">
           <div class="panel-header">
             <span class="panel-icon">👤</span>
-            <h2>{{ selectedNode.data.name }}</h2>
-            <span class="align-badge" :class="'camp-badge-' + selectedNode.data.camp">
-              {{ selectedNode.data.camp }}
+            <h2>{{ charData.name }}</h2>
+            <span class="align-badge" :class="'camp-badge-' + charData.camp">
+              {{ charData.camp }}
             </span>
           </div>
           <div class="panel-body">
             <div class="info-row">
               <span class="info-label">📊 综合评分</span>
-              <span class="score-value">{{ selectedNode.data.avgScore }}</span>
+              <span class="score-value">{{ charData.avgScore }}</span>
             </div>
-            <div class="info-row" v-if="selectedNode.data.factionName">
+            <div class="info-row" v-if="charData.factionName">
               <span class="info-label">🏯 门派</span>
-              <span>{{ selectedNode.data.factionName }}</span>
+              <span>{{ charData.factionName }}</span>
             </div>
-            <div class="info-row" v-if="selectedNode.data.masterName">
+            <div class="info-row" v-if="charData.masterName">
               <span class="info-label">📿 师父</span>
-              <span>{{ selectedNode.data.masterName }}</span>
+              <span>{{ charData.masterName }}</span>
             </div>
-            <div class="info-row" v-if="selectedNode.data.apprentices.length">
+            <div class="info-row" v-if="charData.apprentices.length">
               <span class="info-label">🎓 徒弟</span>
-              <span>{{ selectedNode.data.apprentices.join('、') }}</span>
+              <span>{{ charData.apprentices.join('、') }}</span>
             </div>
-            <div class="info-row" v-if="selectedNode.data.rivals.length">
+            <div class="info-row" v-if="charData.rivals.length">
               <span class="info-label">⚡ 宿敌</span>
-              <span>{{ selectedNode.data.rivals.join('、') }}</span>
+              <span>{{ charData.rivals.join('、') }}</span>
             </div>
-            <div class="info-row" v-if="selectedNode.data.allies.length">
+            <div class="info-row" v-if="charData.allies.length">
               <span class="info-label">🤝 同盟</span>
-              <span>{{ selectedNode.data.allies.join('、') }}</span>
+              <span>{{ charData.allies.join('、') }}</span>
             </div>
-            <p class="info-desc">{{ selectedNode.data.description }}</p>
+            <p class="info-desc">{{ charData.description }}</p>
           </div>
         </template>
       </div>
@@ -138,7 +138,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, shallowRef, watch } from 'vue'
 import * as echarts from 'echarts'
-import { factions, characters, relations } from '@/data/shendiao'
+import { factions, characters, relations } from '@/data/shediao'
 import type { Faction, Character } from '@/data/schemas/types'
 
 // ---- 颜色映射 ----
@@ -219,6 +219,18 @@ interface SelectedNode {
 
 const selectedNode = ref<SelectedNode | null>(null)
 
+// 类型守卫：供模板安全访问人物字段
+const charData = computed((): SelectedCharData | null => {
+  const node = selectedNode.value
+  if (node && node.type === 'character') return node.data as SelectedCharData
+  return null
+})
+const factionData = computed((): SelectedFactionData | null => {
+  const node = selectedNode.value
+  if (node && node.type === 'faction') return node.data as SelectedFactionData
+  return null
+})
+
 function selectFaction(f: Faction) {
   const leader = f.leaderId ? charMap.get(f.leaderId) : undefined
   selectedNode.value = {
@@ -243,7 +255,7 @@ function selectFaction(f: Faction) {
 }
 
 // We need skills import too
-import { skills } from '@/data/shendiao'
+import { skills } from '@/data/shediao'
 
 function selectCharacter(c: Character) {
   const faction = c.factionId ? factionMap.get(c.factionId) : undefined

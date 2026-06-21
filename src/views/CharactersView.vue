@@ -34,13 +34,19 @@
 
     <!-- 人物卡片网格 -->
     <div class="card-grid">
-      <CharacterCard
+      <div
         v-for="char in filteredCharacters"
         :key="char.id"
-        :character="char"
-        :selected="selectedIds.includes(char.id)"
-        @select="toggleSelect"
-      />
+        :id="char.id"
+        class="card-slot"
+        :class="{ 'hash-highlight': highlightId === char.id }"
+      >
+        <CharacterCard
+          :character="char"
+          :selected="selectedIds.includes(char.id)"
+          @select="toggleSelect"
+        />
+      </div>
     </div>
 
     <!-- 对比面板 -->
@@ -53,12 +59,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
 import type { Character } from '@/data/schemas/types'
-import { characters } from '@/data/shendiao'
+import { characters } from '@/data/shediao'
 import CharacterCard from '@/components/CharacterCard.vue'
 import ComparePanel from '@/components/ComparePanel.vue'
 
+const route = useRoute()
 const camps = ['全部', '正派', '邪派', '中立', '隐世'] as const
 const campIcons: Record<string, string> = {
   '全部': '🌐', '正派': '🏯', '邪派': '💀', '隐世': '🏔️', '中立': '⚖️',
@@ -67,6 +75,7 @@ const campIcons: Record<string, string> = {
 const activeCamp = ref('')
 const selectedIds = ref<string[]>([])
 const showCompare = ref(false)
+const highlightId = ref<string>('')
 
 const filteredCharacters = computed(() => {
   if (!activeCamp.value || activeCamp.value === '全部') return characters
@@ -90,6 +99,30 @@ function toggleSelect(char: Character) {
     if (selectedIds.value.length === 2) showCompare.value = true
   }
 }
+
+// ---- 来自搜索的深链接：高亮目标人物 ----
+function applyHashHighlight() {
+  const id = route.hash.replace(/^#/, '')
+  if (!id) {
+    highlightId.value = ''
+    return
+  }
+  // 该人物存在时高亮；若被当前筛选隐藏，则重置筛选使其可见
+  const exists = characters.some((c) => c.id === id)
+  if (!exists) {
+    highlightId.value = ''
+    return
+  }
+  activeCamp.value = ''
+  highlightId.value = id
+  nextTick(() => {
+    const el = document.getElementById(id)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  })
+}
+
+onMounted(applyHashHighlight)
+watch(() => route.hash, applyHashHighlight)
 </script>
 
 <style scoped>
@@ -97,6 +130,30 @@ function toggleSelect(char: Character) {
   max-width: 1100px;
   margin: 0 auto;
   padding: 32px 24px 60px;
+}
+
+/* 来自搜索深链接的高亮 */
+.card-slot {
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  scroll-margin-top: 90px;
+}
+.card-slot.hash-highlight {
+  animation: hash-flash 1.8s ease;
+}
+@keyframes hash-flash {
+  0% {
+    box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.7);
+    transform: scale(1);
+  }
+  25% {
+    box-shadow: 0 0 0 4px rgba(184, 134, 11, 0.5);
+    transform: scale(1.02);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(184, 134, 11, 0);
+    transform: scale(1);
+  }
 }
 
 .page-header {

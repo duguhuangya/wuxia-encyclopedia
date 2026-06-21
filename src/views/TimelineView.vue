@@ -79,7 +79,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, shallowRef, watch } from 'vue'
 import * as echarts from 'echarts'
-import { timeline, characters, novels } from '@/data/shendiao'
+import { timeline, characters, novels } from '@/data/shediao'
 import type { TimelineEvent } from '@/data/schemas/types'
 
 // ---- 筛选 ----
@@ -151,15 +151,9 @@ function buildOption() {
 
   // 构建 ECharts timeline 数据
   const dataPoints: any[] = []
-  const markPoints: any[] = []
 
   events.forEach((event, idx) => {
     const cfg = TYPE_CONFIG[event.type] ?? TYPE_CONFIG['其他']
-    const participants = event.participants
-      .map(id => charMap.get(id)?.name)
-      .filter(Boolean)
-      .join('、')
-
     dataPoints.push({
       value: [idx, event.order],
       name: event.title,
@@ -217,7 +211,7 @@ function buildOption() {
     },
     xAxis: {
       type: 'category',
-      data: events.map((e, i) => `第${e.order}章`),
+      data: events.map((e) => `第${e.order}章`),
       axisLine: { lineStyle: { color: 'rgba(184,134,11,0.3)' } },
       axisLabel: { color: '#a89070', fontSize: 11 },
       axisTick: { show: false },
@@ -355,7 +349,7 @@ function buildOption() {
     ],
     animation: true,
     animationDuration: 600,
-    animationEasing: 'cubicOut',
+    animationEasing: 'cubicOut' as const,
   }
 }
 

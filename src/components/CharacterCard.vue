@@ -1,5 +1,15 @@
 <template>
-  <div class="character-card" :class="{ selected }" @click="$emit('select', character)">
+  <div
+    class="character-card"
+    :class="{ selected }"
+    role="button"
+    tabindex="0"
+    :aria-label="`查看 ${character.name} 详情`"
+    :aria-pressed="selected"
+    @click="$emit('select', character)"
+    @keydown.enter.prevent="$emit('select', character)"
+    @keydown.space.prevent="$emit('select', character)"
+  >
     <div class="card-header">
       <span class="char-icon">{{ campIcon }}</span>
       <div class="char-info">

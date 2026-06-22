@@ -101,9 +101,19 @@ const onVisibility = () => {
   if (visible) draw()
 }
 
+// ponytail: 尊重 prefers-reduced-motion —— 减少动画偏好下只画一帧静态落叶，
+// 不启动 RAF 循环（持续 25 片动画对前庭敏感用户是负担）。
+const prefersReducedMotion = () =>
+  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
 onMounted(() => {
   init()
-  draw()
+  if (prefersReducedMotion()) {
+    draw()  // 仅画一帧静态落叶，保留意境；draw 内部的 RAF 会被下面撤销
+    cancelAnimationFrame(animId)
+  } else {
+    draw()  // 正常启动 RAF 循环
+  }
   document.addEventListener('visibilitychange', onVisibility)
   window.addEventListener('resize', init)
 })

@@ -123,6 +123,12 @@ const novelName = computed(() => {
   return novelMap.get(selectedEvent.value.novelId)?.title ?? ''
 })
 
+// ---- reduced-motion 偏好（关闭 ECharts 入场动画）----
+// ponytail: 内联判断，不引入新依赖；SSR 安全（matchMedia 仅在浏览器存在）
+const reducedMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
 // ---- 类型颜色/图标 ----
 const TYPE_CONFIG: Record<string, { color: string; icon: string }> = {
   '主线': { color: '#4a9eff', icon: '📖' },
@@ -185,7 +191,7 @@ function buildOption() {
     tooltip: {
       trigger: 'item',
       backgroundColor: 'rgba(20,20,30,0.92)',
-      borderColor: 'var(--gold-dim)',
+      borderColor: 'rgba(184,134,11,0.4)',
       textStyle: { color: '#e8d5b7', fontSize: 12 },
       formatter: (params: any) => {
         const raw = params.data?._raw
@@ -348,7 +354,7 @@ function buildOption() {
       },
     ],
     animation: true,
-    animationDuration: 600,
+    animationDuration: reducedMotion() ? 0 : 600,
     animationEasing: 'cubicOut' as const,
   }
 }
@@ -467,9 +473,9 @@ onBeforeUnmount(() => {
 }
 
 .filter-select:focus {
-  outline: none;
   border-color: var(--gold);
 }
+/* :focus-visible 继承全局 gold 焦点环（见 themes.css），不再用 outline:none 抹掉 */
 
 /* ---- 图表 ---- */
 .chart-wrapper {

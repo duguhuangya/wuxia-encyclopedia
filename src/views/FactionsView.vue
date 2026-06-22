@@ -141,6 +141,12 @@ import * as echarts from 'echarts'
 import { factions, characters, relations } from '@/data/shediao'
 import type { Faction, Character } from '@/data/schemas/types'
 
+// ---- reduced-motion 偏好（关闭力导向入场动画）----
+// ponytail: 内联判断，不引入新依赖；SSR 安全
+const reducedMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
 // ---- 颜色映射 ----
 const ALIGNMENT_COLORS: Record<string, string> = {
   '正': '#4a9eff',
@@ -447,7 +453,7 @@ function buildGraphOption() {
     tooltip: {
       trigger: 'item',
       backgroundColor: 'rgba(20,20,30,0.9)',
-      borderColor: 'var(--gold-dim)',
+      borderColor: 'rgba(184,134,11,0.4)',
       textStyle: { color: '#e8d5b7', fontSize: 12 },
       formatter: (params: any) => {
         if (params.dataType === 'edge') {
@@ -467,7 +473,7 @@ function buildGraphOption() {
       type: 'graph',
       layout: 'force',
       animation: true,
-      animationDuration: 800,
+      animationDuration: reducedMotion() ? 0 : 800,
       draggable: true,
       roam: true,
       zoom: 1,

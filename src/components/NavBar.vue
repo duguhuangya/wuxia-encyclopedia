@@ -23,12 +23,13 @@
         <button
           class="btn-icon"
           @click="toggleTheme"
-          :aria-label="theme === 'ink' ? '切换为古风宣纸主题' : '切换为水墨暗黑主题'"
           title="切换主题"
+          :aria-label="theme === 'ink' ? '切换为古风宣纸主题' : '切换为水墨暗黑主题'"
+          aria-haspopup="dialog"
         >
           {{ theme === 'ink' ? '📜' : '🌑' }}
         </button>
-        <router-link to="/settings" class="btn-icon" aria-label="设置" title="设置">
+        <router-link to="/settings" class="btn-icon" title="设置" aria-label="设置">
           ⚙️
         </router-link>
 
@@ -174,6 +175,9 @@ watch(menuOpen, (open) => {
   text-decoration: none;
   transition: all 0.2s;
   white-space: nowrap;
+  min-height: 44px;       /* 触摸目标 ≥44px（视觉不变，命中区达标）*/
+  display: inline-flex;
+  align-items: center;
 }
 
 .nav-link:hover {
@@ -193,8 +197,8 @@ watch(menuOpen, (open) => {
 }
 
 .btn-icon {
-  width: 36px;
-  height: 36px;
+  width: 44px;            /* 触摸目标 ≥44px（图标按钮达标）*/
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;

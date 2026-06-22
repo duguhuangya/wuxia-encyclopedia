@@ -1,5 +1,13 @@
 <template>
-  <div class="secret-card" @click="$emit('click')">
+  <div
+    class="secret-card"
+    role="button"
+    tabindex="0"
+    :aria-label="`江湖秘闻：${title}`"
+    @click="$emit('click')"
+    @keydown.enter.prevent="$emit('click')"
+    @keydown.space.prevent="$emit('click')"
+  >
     <div class="card-badge">{{ badge }}</div>
     <h3 class="card-title">{{ title }}</h3>
     <p class="card-desc">{{ description }}</p>

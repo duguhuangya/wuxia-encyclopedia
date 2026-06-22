@@ -9,7 +9,7 @@
   --bg-gradient: linear-gradient(135deg, #121212 0%, #1a1a2e 50%, #16213e 100%);
   --text-primary: #e8d5b7;
   --text-secondary: #a89070;
-  --text-muted: #6b5d4f;
+  --text-muted: #928066;
   --accent: #c0392b;
   --accent-hover: #e74c3c;
   --gold: #b8860b;
@@ -35,7 +35,7 @@
   --bg-gradient: linear-gradient(135deg, #f5e6c8 0%, #e8d5b7 50%, #dcc8a0 100%);
   --text-primary: #2c1810;
   --text-secondary: #5a3e2b;
-  --text-muted: #8b7355;
+  --text-muted: #7a6045;
   --accent: #8b4513;
   --accent-hover: #a0522d;
   --gold: #b8860b;
@@ -59,6 +59,23 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* 可见焦点环（键盘可达性）：仅键盘聚焦时显示，鼠标点击不打扰 */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* 尊重用户的减少动画偏好（可访问性） */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 html {
